@@ -2,6 +2,8 @@ package com.mysite.board_example.service;
 
 import com.mysite.board_example.dto.AddArticleRequest;
 import com.mysite.board_example.dto.AddArticleResponse;
+import com.mysite.board_example.dto.GetAllArticlesResponse;
+import com.mysite.board_example.dto.GetArticleDTO;
 import com.mysite.board_example.entity.Article;
 import com.mysite.board_example.entity.User;
 import com.mysite.board_example.error.ErrorCode;
@@ -11,6 +13,7 @@ import com.mysite.board_example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,4 +44,20 @@ public class BoardService {
                 .authorName(savedArticle.getUser().getName())
                 .build();
     }
+
+    public GetAllArticlesResponse findAllArticles(){
+        List<GetArticleDTO> articles = articleRepository.findAll().stream()
+                .map((Article a) -> GetArticleDTO.builder()
+                        .articleId(a.getArticleId())
+                        .title(a.getTitle())
+                        .content(a.getContent())
+                        .authorName(a.getUser().getName())
+                        .build())
+                .toList();
+
+        return GetAllArticlesResponse.builder()
+                .articles(articles)
+                .build();
+    }
+
 }
