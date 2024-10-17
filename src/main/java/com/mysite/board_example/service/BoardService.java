@@ -2,11 +2,13 @@ package com.mysite.board_example.service;
 
 import com.mysite.board_example.dto.*;
 import com.mysite.board_example.entity.Article;
+import com.mysite.board_example.entity.Comment;
 import com.mysite.board_example.entity.User;
 import com.mysite.board_example.error.ArticleDoesntExistException;
 import com.mysite.board_example.error.ErrorCode;
 import com.mysite.board_example.error.UserDoesntExistException;
 import com.mysite.board_example.repository.ArticleRepository;
+import com.mysite.board_example.repository.CommentRepository;
 import com.mysite.board_example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class BoardService {
 
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public AddArticleResponse saveArticle(AddArticleRequest addArticleRequest) {
@@ -105,5 +108,33 @@ public class BoardService {
             throw new ArticleDoesntExistException("article doesnt exist", ErrorCode.ARTICLE_DOESNT_EXIST);
         }
         articleRepository.deleteById(id);
+    }
+
+    @Transactional
+    public AddCommentResponse saveComment(Integer id, AddCommentRequest addCommentRequest) {
+        Optional<Article> op_article = articleRepository.findById(id);
+        if (op_article.isEmpty()) {
+            throw new ArticleDoesntExistException("article doesnt exist", ErrorCode.ARTICLE_DOESNT_EXIST);
+        }
+        Optional<User> op_user = userRepository.findById(addCommentRequest.getUserId());
+        if (op_user.isEmpty()) {
+            throw new UserDoesntExistException("user doesnt exist", ErrorCode.USER_DOESNT_EXIST);
+        }
+
+        User user = op_user.get();
+        Article article = op_article.get();
+
+        Comment savedComment = commentRepository.save(Comment.builder()
+                .user(user)
+                .article(article)
+                .content(addCommentRequest.getContent())
+                .build());
+
+        return AddCommentResponse.builder()
+                .commentId(savedComment.getCommentId())
+                .userId(user.getUserId())
+                .articleId(article.getArticleId())
+                .content(savedComment.getContent())
+                .build();
     }
 }
