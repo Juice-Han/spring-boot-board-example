@@ -36,4 +36,10 @@ public class ArticleController {
         UpdateArticleResponse updateArticleResponse = boardService.updateArticle(id, updateArticleRequest);
         return new ResponseEntity<>(updateArticleResponse, HttpStatus.OK);
     }
+
+    @DeleteMapping("/api/articles/{id}")
+    public ResponseEntity<Void> deleteArticle(@PathVariable("id") Integer id){
+        boardService.deleteArticle(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

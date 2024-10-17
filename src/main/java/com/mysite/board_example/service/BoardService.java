@@ -98,4 +98,12 @@ public class BoardService {
                 .article(articleDTO)
                 .build();
     }
+
+    public void deleteArticle(Integer id) {
+        Optional<Article> op = articleRepository.findById(id);
+        if (op.isEmpty()) {
+            throw new ArticleDoesntExistException("article doesnt exist", ErrorCode.ARTICLE_DOESNT_EXIST);
+        }
+        articleRepository.deleteById(id);
+    }
 }
