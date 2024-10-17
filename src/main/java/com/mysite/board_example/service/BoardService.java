@@ -1,9 +1,6 @@
 package com.mysite.board_example.service;
 
-import com.mysite.board_example.dto.AddArticleRequest;
-import com.mysite.board_example.dto.AddArticleResponse;
-import com.mysite.board_example.dto.GetAllArticlesResponse;
-import com.mysite.board_example.dto.GetArticleDTO;
+import com.mysite.board_example.dto.*;
 import com.mysite.board_example.entity.Article;
 import com.mysite.board_example.entity.User;
 import com.mysite.board_example.error.ArticleDoesntExistException;
@@ -75,6 +72,30 @@ public class BoardService {
                 .title(article.getTitle())
                 .content(article.getContent())
                 .authorName(article.getUser().getName())
+                .build();
+    }
+
+    @Transactional
+    public UpdateArticleResponse updateArticle(Integer id, UpdateArticleRequest updateArticleRequest) {
+        Optional<Article> op = articleRepository.findById(id);
+        if (op.isEmpty()) {
+            throw new ArticleDoesntExistException("article doesnt exist", ErrorCode.ARTICLE_DOESNT_EXIST);
+        }
+
+        Article article = op.get();
+        article.updateTitle(updateArticleRequest.getTitle());
+        article.updateContent(updateArticleRequest.getContent());
+        articleRepository.save(article);
+
+        GetArticleDTO articleDTO = GetArticleDTO.builder()
+                .articleId(article.getArticleId())
+                .title(article.getTitle())
+                .content(article.getContent())
+                .authorName(article.getUser().getName())
+                .build();
+
+        return UpdateArticleResponse.builder()
+                .article(articleDTO)
                 .build();
     }
 }

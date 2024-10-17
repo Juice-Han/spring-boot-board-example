@@ -1,9 +1,6 @@
 package com.mysite.board_example.controller;
 
-import com.mysite.board_example.dto.AddArticleRequest;
-import com.mysite.board_example.dto.AddArticleResponse;
-import com.mysite.board_example.dto.GetAllArticlesResponse;
-import com.mysite.board_example.dto.GetArticleDTO;
+import com.mysite.board_example.dto.*;
 import com.mysite.board_example.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,5 +29,11 @@ public class ArticleController {
     public ResponseEntity<GetArticleDTO> findArticleById(@PathVariable("id") Integer id){
         GetArticleDTO articleDTO = boardService.findArticleById(id);
         return new ResponseEntity<>(articleDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/api/articles/{id}")
+    public ResponseEntity<UpdateArticleResponse> updateArticle(@PathVariable("id") Integer id, @RequestBody UpdateArticleRequest updateArticleRequest){
+        UpdateArticleResponse updateArticleResponse = boardService.updateArticle(id, updateArticleRequest);
+        return new ResponseEntity<>(updateArticleResponse, HttpStatus.OK);
     }
 }
