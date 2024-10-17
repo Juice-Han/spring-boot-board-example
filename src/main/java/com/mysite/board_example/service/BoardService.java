@@ -6,12 +6,14 @@ import com.mysite.board_example.dto.GetAllArticlesResponse;
 import com.mysite.board_example.dto.GetArticleDTO;
 import com.mysite.board_example.entity.Article;
 import com.mysite.board_example.entity.User;
+import com.mysite.board_example.error.ArticleDoesntExistException;
 import com.mysite.board_example.error.ErrorCode;
 import com.mysite.board_example.error.UserDoesntExistException;
 import com.mysite.board_example.repository.ArticleRepository;
 import com.mysite.board_example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +25,10 @@ public class BoardService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
 
-    public AddArticleResponse save(AddArticleRequest addArticleRequest){
+    @Transactional
+    public AddArticleResponse save(AddArticleRequest addArticleRequest) {
         Optional<User> user = userRepository.findById(addArticleRequest.getUserId());
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new UserDoesntExistException("user doesnt exist", ErrorCode.USER_DOESNT_EXIST);
         }
 
@@ -45,7 +48,7 @@ public class BoardService {
                 .build();
     }
 
-    public GetAllArticlesResponse findAllArticles(){
+    public GetAllArticlesResponse findAllArticles() {
         List<GetArticleDTO> articles = articleRepository.findAll().stream()
                 .map((Article a) -> GetArticleDTO.builder()
                         .articleId(a.getArticleId())
@@ -60,4 +63,18 @@ public class BoardService {
                 .build();
     }
 
+    public GetArticleDTO findArticleById(Integer id) {
+        Optional<Article> op = articleRepository.findById(id);
+        if (op.isEmpty()) {
+            throw new ArticleDoesntExistException("article doesnt exist", ErrorCode.ARTICLE_DOESNT_EXIST);
+        }
+        Article article = op.get();
+
+        return GetArticleDTO.builder()
+                .articleId(article.getArticleId())
+                .title(article.getTitle())
+                .content(article.getContent())
+                .authorName(article.getUser().getName())
+                .build();
+    }
 }

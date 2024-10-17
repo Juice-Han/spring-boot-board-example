@@ -16,4 +16,11 @@ public class GlobalExceptionHandler {
         ErrorResponse response = new ErrorResponse(e.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
     }
+
+    @ExceptionHandler(ArticleDoesntExistException.class)
+    public ResponseEntity<ErrorResponse> handleArticleDoesntExistException(ArticleDoesntExistException e) {
+        log.error("handleArticleDoesntExistException", e);
+        ErrorResponse response = new ErrorResponse(e.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
+    }
 }
