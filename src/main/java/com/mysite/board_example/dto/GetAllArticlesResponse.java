@@ -1,6 +1,5 @@
 package com.mysite.board_example.dto;
 
-import com.mysite.board_example.entity.Article;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,26 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class GetAllArticlesResponse {
-    private List<GetArticleDTO> articles;
+    private List<ArticleDTO> articles;
 
     @Builder
-    public GetAllArticlesResponse(List<GetArticleDTO> articles) {
+    public GetAllArticlesResponse(List<ArticleDTO> articles) {
         this.articles = articles;
+    }
+
+    @Getter
+    public static class ArticleDTO{
+        private Integer articleId;
+        private String title;
+        private String content;
+        private String authorName;
+
+        @Builder
+        public ArticleDTO(Integer articleId, String title, String content, String authorName) {
+            this.articleId = articleId;
+            this.title = title;
+            this.content = content;
+            this.authorName = authorName;
+        }
     }
 }

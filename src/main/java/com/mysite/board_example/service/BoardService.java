@@ -49,8 +49,8 @@ public class BoardService {
     }
 
     public GetAllArticlesResponse findAllArticles() {
-        List<GetArticleDTO> articles = articleRepository.findAll().stream()
-                .map((Article a) -> GetArticleDTO.builder()
+        List<GetAllArticlesResponse.ArticleDTO> articles = articleRepository.findAll().stream()
+                .map((Article a) -> GetAllArticlesResponse.ArticleDTO.builder()
                         .articleId(a.getArticleId())
                         .title(a.getTitle())
                         .content(a.getContent())
@@ -63,18 +63,23 @@ public class BoardService {
                 .build();
     }
 
-    public GetArticleDTO findArticleById(Integer id) {
+    public GetArticleResponse findArticleById(Integer id) {
         Optional<Article> op = articleRepository.findById(id);
         if (op.isEmpty()) {
             throw new ArticleDoesntExistException("article doesnt exist", ErrorCode.ARTICLE_DOESNT_EXIST);
         }
         Article article = op.get();
 
-        return GetArticleDTO.builder()
+        return GetArticleResponse.builder()
                 .articleId(article.getArticleId())
                 .title(article.getTitle())
                 .content(article.getContent())
                 .authorName(article.getUser().getName())
+                .comments(article.getComments().stream().map((Comment c) -> GetArticleResponse.CommentDTO.builder()
+                        .content(c.getContent())
+                        .commentId(c.getCommentId())
+                        .name(c.getUser().getName())
+                        .build()).toList())
                 .build();
     }
 
@@ -88,17 +93,13 @@ public class BoardService {
         Article article = op.get();
         article.updateTitle(updateArticleRequest.getTitle());
         article.updateContent(updateArticleRequest.getContent());
-        articleRepository.save(article);
-
-        GetArticleDTO articleDTO = GetArticleDTO.builder()
-                .articleId(article.getArticleId())
-                .title(article.getTitle())
-                .content(article.getContent())
-                .authorName(article.getUser().getName())
-                .build();
+        Article savedArticle = articleRepository.save(article);
 
         return UpdateArticleResponse.builder()
-                .article(articleDTO)
+                .articleId(savedArticle.getArticleId())
+                .title(savedArticle.getTitle())
+                .content(savedArticle.getContent())
+                .authorName(savedArticle.getUser().getName())
                 .build();
     }
 

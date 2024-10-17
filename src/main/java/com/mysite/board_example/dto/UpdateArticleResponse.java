@@ -9,10 +9,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UpdateArticleResponse {
-    private GetArticleDTO article;
+    private Integer articleId;
+    private String title;
+    private String content;
+    private String authorName;
 
     @Builder
-    public UpdateArticleResponse(GetArticleDTO article) {
-        this.article = article;
+    public UpdateArticleResponse(Integer articleId, String title, String content, String authorName) {
+        this.articleId = articleId;
+        this.title = title;
+        this.content = content;
+        this.authorName = authorName;
     }
 }

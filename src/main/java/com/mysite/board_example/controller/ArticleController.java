@@ -26,8 +26,8 @@ public class ArticleController {
     }
 
     @GetMapping("/api/articles/{id}")
-    public ResponseEntity<GetArticleDTO> findArticleById(@PathVariable("id") Integer id){
-        GetArticleDTO articleDTO = boardService.findArticleById(id);
+    public ResponseEntity<GetArticleResponse> findArticleById(@PathVariable("id") Integer id){
+        GetArticleResponse articleDTO = boardService.findArticleById(id);
         return new ResponseEntity<>(articleDTO, HttpStatus.OK);
     }
 
