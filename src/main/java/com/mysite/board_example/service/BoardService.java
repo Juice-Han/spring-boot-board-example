@@ -23,7 +23,7 @@ public class BoardService {
     private final UserRepository userRepository;
 
     @Transactional
-    public AddArticleResponse save(AddArticleRequest addArticleRequest) {
+    public AddArticleResponse saveArticle(AddArticleRequest addArticleRequest) {
         Optional<User> user = userRepository.findById(addArticleRequest.getUserId());
         if (user.isEmpty()) {
             throw new UserDoesntExistException("user doesnt exist", ErrorCode.USER_DOESNT_EXIST);

@@ -15,7 +15,7 @@ public class ArticleController {
 
     @PostMapping("/api/articles")
     public ResponseEntity<AddArticleResponse> saveArticle(@RequestBody AddArticleRequest addArticleRequest) {
-        AddArticleResponse addArticleResponse = boardService.save(addArticleRequest);
+        AddArticleResponse addArticleResponse = boardService.saveArticle(addArticleRequest);
         return new ResponseEntity<>(addArticleResponse, HttpStatus.CREATED);
     }
 
