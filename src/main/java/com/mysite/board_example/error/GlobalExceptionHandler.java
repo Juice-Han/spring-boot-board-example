@@ -23,4 +23,18 @@ public class GlobalExceptionHandler {
         ErrorResponse response = new ErrorResponse(e.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
     }
+
+    @ExceptionHandler(CommentDoesntExistException.class)
+    public ResponseEntity<ErrorResponse> handleCommentDoesntExistException(CommentDoesntExistException e) {
+        log.error("handleCommentDoesntExistException", e);
+        ErrorResponse response = new ErrorResponse(e.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(CommentArticleNotMatchException.class)
+    public ResponseEntity<ErrorResponse> handleCommentArticleNotMatchException(CommentArticleNotMatchException e) {
+        log.error("handleCommentArticleNotMatchException", e);
+        ErrorResponse response = new ErrorResponse(e.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
+    }
 }

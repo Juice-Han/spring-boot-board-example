@@ -4,9 +4,7 @@ import com.mysite.board_example.dto.*;
 import com.mysite.board_example.entity.Article;
 import com.mysite.board_example.entity.Comment;
 import com.mysite.board_example.entity.User;
-import com.mysite.board_example.error.ArticleDoesntExistException;
-import com.mysite.board_example.error.ErrorCode;
-import com.mysite.board_example.error.UserDoesntExistException;
+import com.mysite.board_example.error.*;
 import com.mysite.board_example.repository.ArticleRepository;
 import com.mysite.board_example.repository.CommentRepository;
 import com.mysite.board_example.repository.UserRepository;
@@ -137,5 +135,19 @@ public class BoardService {
                 .articleId(article.getArticleId())
                 .content(savedComment.getContent())
                 .build();
+    }
+
+    @Transactional
+    public void deleteComment(Integer articleId, Integer commentId){
+        Optional<Comment> op_comment = commentRepository.findById(commentId);
+        if(op_comment.isEmpty()){
+            throw new CommentDoesntExistException("comment doesnt exist", ErrorCode.COMMENT_DOESNT_EXIST);
+        }
+        Comment comment = op_comment.get();
+
+        if(!comment.getArticle().getArticleId().equals(articleId)){
+            throw new CommentArticleNotMatchException("comment article not match", ErrorCode.COMMENT_ARTICLE_NOT_MATCH);
+        }
+        commentRepository.delete(comment);
     }
 }
