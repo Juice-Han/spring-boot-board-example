@@ -32,7 +32,7 @@ public class User {
     @Column(name = "profile_introduce", columnDefinition = "TEXT")
     private String profileIntroduce;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
