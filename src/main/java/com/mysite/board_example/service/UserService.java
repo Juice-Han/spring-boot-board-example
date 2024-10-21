@@ -1,5 +1,6 @@
 package com.mysite.board_example.service;
 
+import com.mysite.board_example.dto.CheckIdDuplicationResponse;
 import com.mysite.board_example.dto.CreateUserRequest;
 import com.mysite.board_example.dto.CreateUserResponse;
 import com.mysite.board_example.dto.DeleteUserResponse;
@@ -51,5 +52,14 @@ public class UserService {
         return DeleteUserResponse.builder()
                 .userId(userId)
                 .build();
+    }
+
+    public CheckIdDuplicationResponse checkIdDuplication(String checkingId) {
+        Optional<User> op_user = userRepository.findUserById(checkingId);
+        CheckIdDuplicationResponse checkIdDuplicationResponse = new CheckIdDuplicationResponse();
+        checkIdDuplicationResponse.setCheckingId(checkingId);
+
+        checkIdDuplicationResponse.setIsPossible(op_user.isEmpty());
+        return checkIdDuplicationResponse;
     }
 }

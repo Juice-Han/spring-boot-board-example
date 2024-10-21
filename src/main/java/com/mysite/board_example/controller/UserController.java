@@ -1,5 +1,6 @@
 package com.mysite.board_example.controller;
 
+import com.mysite.board_example.dto.CheckIdDuplicationResponse;
 import com.mysite.board_example.dto.CreateUserRequest;
 import com.mysite.board_example.dto.CreateUserResponse;
 import com.mysite.board_example.dto.DeleteUserResponse;
@@ -25,5 +26,11 @@ public class UserController {
     public ResponseEntity<DeleteUserResponse> deleteUser(@PathVariable("user_id") Integer userId) {
         DeleteUserResponse deleteUserResponse = userService.deleteUser(userId);
         return new ResponseEntity<>(deleteUserResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/users/id-check")
+    public ResponseEntity<CheckIdDuplicationResponse> checkIdDuplication(@RequestParam("id") String checkingId){
+        CheckIdDuplicationResponse checkIdDuplicationResponse = userService.checkIdDuplication(checkingId);
+        return new ResponseEntity<>(checkIdDuplicationResponse, HttpStatus.OK);
     }
 }
