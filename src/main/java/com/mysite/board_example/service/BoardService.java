@@ -46,6 +46,7 @@ public class BoardService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public GetAllArticlesResponse findAllArticles() {
         List<GetAllArticlesResponse.ArticleDTO> articles = articleRepository.findAll().stream()
                 .map((Article a) -> GetAllArticlesResponse.ArticleDTO.builder()
@@ -61,6 +62,7 @@ public class BoardService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public GetArticleResponse findArticleById(Integer id) {
         Optional<Article> op = articleRepository.findById(id);
         if (op.isEmpty()) {
